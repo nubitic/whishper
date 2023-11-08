@@ -29,8 +29,8 @@
 		} else {
 			new_uri = 'ws:';
 		}
-		new_uri += '//' + (CLIENT_WS_HOST == '' ? loc.host : CLIENT_WS_HOST);
-		new_uri += '/ws/transcriptions';
+		new_uri += '//' + (CLIENT_WS_HOST == '' ? loc.host : CLIENT_WS_HOST) + loc.pathname;
+		new_uri += 'ws/transcriptions';
 		console.log('Connecting to: ', new_uri);
 		socket = new WebSocket(new_uri);
 
