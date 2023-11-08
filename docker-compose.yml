@@ -21,35 +21,10 @@ services:
       timeout: 3s
       retries: 5
 
-  translate-cpu:
-    container_name: whisper-libretranslate
-    profiles: ["cpu"]
-    image: libretranslate/libretranslate:latest
-    restart: unless-stopped
-    volumes:
-      - ./whishper_data/libretranslate/data:/home/libretranslate/.local/share
-      - ./whishper_data/libretranslate/cache:/home/libretranslate/.local/cache
-    env_file:
-      - .env
-    tty: true
-    environment:
-      LT_DISABLE_WEB_UI: True
-      #LT_UPDATE_MODELS: True
-    expose:
-      - 5000
-    networks:
-      default:
-        aliases:
-          - translate
-    healthcheck:
-      test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
-      interval: 2s
-      timeout: 3s
-      retries: 5
-
   translate-gpu:
     container_name: whisper-libretranslate
-    image: libretranslate/libretranslate:latest-cuda
+    image: nubitic/libretranslate:1.4.0-cuda
+    runtime: nvidia
     profiles: ["gpu"]
     restart: unless-stopped
     volumes:
@@ -69,43 +44,17 @@ services:
       default:
         aliases:
           - translate
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
-    healthcheck:
-      test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
-      interval: 2s
-      timeout: 3s
-      retries: 5
-
-  transcription-api-cpu:
-    container_name: whisper-api
-    profiles: ["cpu"]
-    image: pluja/whishper-transcription-api:latest
-    env_file:
-      - .env
-    volumes:
-      - ./whishper_data/whisper_models:/app/models
-      - ./whishper_data/uploads:/app/uploads
-    environment:
-      - WHISPER_MODELS_DIR=/app/models
-      - UPLOAD_DIR=/app/uploads
-    networks:
-      default:
-        aliases:
-          - transcription-api
-    restart: unless-stopped
-    expose:
-      - 8000
+            #    healthcheck:
+            #      test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
+            #      interval: 2s
+            #      timeout: 3s
+            #      retries: 5
 
   transcription-api-gpu:
     container_name: whisper-api
     profiles: ["gpu"]
-    image: pluja/whishper-transcription-api:latest-gpu
+    image: nubitic/whishper-transcription-api:2.0.0-cuda
+    runtime: nvidia
     env_file:
       - .env
     volumes:
@@ -121,17 +70,10 @@ services:
       default:
         aliases:
           - transcription-api
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
 
   whishper-backend:
     container_name: whishper-backend
-    image: pluja/whishper-backend:latest
+    image: nubitic/whishper-backend:2.0.0-arm64v8
     env_file:
       - .env
     volumes:
@@ -142,8 +84,8 @@ services:
         condition: service_healthy
     healthcheck:
       test: curl --fail http://localhost:8080/api/transcriptions || exit 1
-      interval: 2s
-      timeout: 2s
+      interval: 5s
+      timeout: 5s
       retries: 5
     expose:
       - 8080
