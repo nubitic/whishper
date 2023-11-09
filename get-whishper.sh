@@ -60,11 +60,11 @@ fi
 
 echo ""
 echo -e "ℹ️  Getting the docker-compose.yml file from Github"
-curl -o docker-compose.yml https://raw.githubusercontent.com/pluja/whishper/main/docker-compose.yml > /dev/null 2>&1
+curl -o docker-compose.yml https://raw.githubusercontent.com/nubitic/whishper/main/docker-compose.yml > /dev/null 2>&1
 sleep 1
 
 echo -e "ℹ️  Getting the nginx.conf file from Github"
-curl -o nginx.conf https://raw.githubusercontent.com/pluja/whishper/main/nginx.conf > /dev/null 2>&1
+curl -o nginx.conf https://raw.githubusercontent.com/nubitic/whishper/main/nginx.conf > /dev/null 2>&1
 sleep 1
 
 # check if .env exists
@@ -76,13 +76,13 @@ if [ -f .env ]; then
     if [ "$answer" != "${answer#[Yy]}" ] ;then
         echo -e "ℹ️  Copying env.example to .env"
         cp .env .env.backup
-        curl -o .env https://raw.githubusercontent.com/pluja/whishper/main/example.env > /dev/null 2>&1
+        curl -o .env https://raw.githubusercontent.com/nubitic/whishper/main/example.env > /dev/null 2>&1
         sleep 1
     fi
     echo ""
 else
     echo -e "ℹ️  Getting the default .env file from Github"
-    curl -o .env https://raw.githubusercontent.com/pluja/whishper/main/example.env > /dev/null 2>&1
+    curl -o .env https://raw.githubusercontent.com/nubitic/whishper/main/example.env > /dev/null 2>&1
     sleep 1
 fi
 
