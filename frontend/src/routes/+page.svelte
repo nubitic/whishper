@@ -2,7 +2,7 @@
 	import { Toaster } from 'svelte-french-toast';
 	import { transcriptions } from '$lib/stores';
 	import { browser, dev } from '$app/environment';
-	import { CLIENT_WS_HOST } from '$lib/utils';
+	import { CLIENT_WS_HOST, CLIENT_API_HOST } from '$lib/utils';
 	import { onMount, onDestroy } from 'svelte';
 	import ModalTranscriptionForm from '$lib/components/ModalTranscriptionForm.svelte';
 	import ModalDownloadOptions from '$lib/components/ModalDownloadOptions.svelte';
@@ -29,8 +29,8 @@
 		} else {
 			new_uri = 'ws:';
 		}
-		new_uri += '//' + (CLIENT_WS_HOST == '' ? loc.host : CLIENT_WS_HOST) + loc.pathname;
-		new_uri += 'ws/transcriptions';
+		new_uri += '//' + (CLIENT_WS_HOST == '' ? loc.host : CLIENT_WS_HOST);
+		new_uri += '/ws/transcriptions';
 		console.log('Connecting to: ', new_uri);
 		socket = new WebSocket(new_uri);
 
@@ -91,7 +91,7 @@
 <header>
 	<h1 class="flex items-center justify-center space-x-4 font-bold text-4xl mt-8">
 		<span>
-			<img class="w-20 h-20" src="/logo.svg" alt="Logo: a cloud whispering" />
+			<img class="w-20 h-20" src={`${CLIENT_API_HOST}/logo.svg`} alt="Logo: a cloud whispering" />
 		</span>
 		<span> Whishper </span>
 	</h1>

@@ -30,7 +30,7 @@
         </p>
     </span>
     <div class="flex items-center justify-center flex-wrap space-x-2">
-        <a href="/editor/{tr.id}" class="btn btn-xs md:btn-sm">
+        <a href="./editor/{tr.id}" class="btn btn-xs md:btn-sm">
             <span class="tooltip flex items-center justify-center" data-tip="Edit">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
