@@ -1,6 +1,6 @@
 <script>
 	import { Toaster } from 'svelte-french-toast';
-	import { transcriptions } from '$lib/stores';
+	import { transcriptions, storageStats } from '$lib/stores';
 	import { browser, dev } from '$app/environment';
 	import { CLIENT_WS_HOST, CLIENT_API_HOST } from '$lib/utils';
 	import { onMount, onDestroy } from 'svelte';
@@ -81,6 +81,12 @@
 			socket.close(1000);
 		}
 	});
+
+      export const numberFormatter = new Intl.NumberFormat('en-US', {
+          style: 'decimal',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
 </script>
 
 <Toaster />
@@ -103,6 +109,7 @@
 		class="btn btn-primary mx-auto max-w-md mt-8 btn-md"
 		onclick="modalNewTranscription.showModal()">✨ new transcription</button
 	>
+	<div class="text-center">{numberFormatter.format(Math.round($storageStats.occupiedBytes/1024/1024/1024))} GB<progress class="progress w-56" style="margin-left: 0.25em; margin-right: 0.25em;" value={numberFormatter.format(Math.round($storageStats.occupiedBytes/1024/1024/1024))} max={numberFormatter.format(Math.round($storageStats.availableBytes/1024/1024/1024))}></progress>{numberFormatter.format(Math.round($storageStats.availableBytes/1024/1024/1024))} GB</div>
 	<div class="card-body items-center text-center mb-0">
 		{#if $transcriptions.length > 0}
 			{#each $transcriptions as tr (tr.id)}

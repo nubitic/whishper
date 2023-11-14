@@ -23,3 +23,5 @@ export let editorSettings = writable({
 
 // Video player settings
 export const currentVideoPlayerTime = writable(0);
+
+export const storageStats = writable(null);

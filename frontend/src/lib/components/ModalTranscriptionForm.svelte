@@ -6,8 +6,8 @@
 
 	let errorMessage = '';
 	let disableSubmit = true;
-	let modelSize = 'small';
-	let language = 'auto';
+	let modelSize = 'large-v2';
+	let language = 'es';
 	let sourceUrl = '';
 	let fileInput;
 	let device = (env.PUBLIC_WHISHPER_PROFILE == "gpu") ? 'cuda' : 'cpu';

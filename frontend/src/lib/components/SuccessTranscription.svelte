@@ -11,6 +11,11 @@
     let translate = () => {
         dispatch('translate', tr); // emit a custom event with the transcription as detail
     }
+    export const numberFormatter = new Intl.NumberFormat('en-US', {
+	  style: 'decimal',
+	  minimumFractionDigits: 0,
+	  maximumFractionDigits: 0
+	});
 </script>
 
 <div class="alert alert-success p-3">
@@ -19,13 +24,13 @@
         <p class="font-bold text-info-content text-md">{tr.fileName.split("_WHSHPR_")[1]}</p>
         <p class="font-mono text-info-content text-sm opacity-60 flex space-x-2 md:space-x-4 lg:space-x-8">
             <span class="space-x-1">
-                <span class="font-bold text-xs">~{Math.round(tr.result.duration)}s long</span>
+                <span class="font-bold text-xs">~{numberFormatter.format(Math.round(tr.result.duration/60))}m long</span>
             </span>
             <span class="space-x-1">
                 <span class="font-bold text-xs">{tr.translations.length} translations</span>
             </span>
             <span class="space-x-1">
-                <span class="font-bold text-xs">{tr.result.text.split(" ").length} words</span>
+                <span class="font-bold text-xs">{numberFormatter.format(tr.result.text.split(" ").length)} words</span>
             </span>
         </p>
     </span>

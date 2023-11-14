@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+	"golang.org/x/sys/unix"
+	"path/filepath"
 
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +13,20 @@ import (
 
 	"codeberg.org/pluja/whishper/models"
 )
+
+func DirSize(path string) (int64, error) {
+    var size int64
+    err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
+        if err != nil {
+            return err
+        }
+        if !info.IsDir() {
+            size += info.Size()
+        }
+        return err
+    })
+    return size, err
+}
 
 func (s *Server) handleGetAllTranscriptions(c *fiber.Ctx) error {
 	transcriptions := s.Db.GetAllTranscriptions()
@@ -27,6 +43,34 @@ func (s *Server) handleGetAllTranscriptions(c *fiber.Ctx) error {
 	c.Write(json)
 	return nil
 }
+
+func (s *Server) handleGetStorageStats(c *fiber.Ctx) error {
+	var stat unix.Statfs_t
+	unix.Statfs("/app/uploads", &stat)
+
+        dirSize, err := DirSize("/app/uploads");
+
+        if err != nil {
+                // 503 On vacation!
+                return fiber.NewError(fiber.StatusServiceUnavailable, "On vacation!")
+        }
+
+        json, err := json.Marshal(struct{
+				    X uint64 `json:"totalSizeBytes"`
+				    Y uint64 `json:"availableBytes"`
+				    Z int64 `json:"occupiedBytes"`
+			    }{X: (stat.Blocks * uint64(stat.Bsize)), Y: (stat.Bavail * uint64(stat.Bsize)), Z: dirSize })
+        if err != nil {
+                // 503 On vacation!
+                return fiber.NewError(fiber.StatusServiceUnavailable, "On vacation!")
+        }
+
+        // Write the JSON to the response body.
+        c.Set("Content-Type", "application/json")
+	c.Write(json)
+        return nil
+}
+
 
 func (s *Server) handleGetTranscriptionById(c *fiber.Ctx) error {
 	id := c.Params("id")
