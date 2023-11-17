@@ -109,7 +109,7 @@
 		class="btn btn-primary mx-auto max-w-md mt-8 btn-md"
 		onclick="modalNewTranscription.showModal()">✨ new transcription</button
 	>
-	<div class="text-center">{numberFormatter.format(Math.round($storageStats.occupiedBytes/1024/1024/1024))} GB<progress class="progress w-56" style="margin-left: 0.25em; margin-right: 0.25em;" value={numberFormatter.format(Math.round($storageStats.occupiedBytes/1024/1024/1024))} max={numberFormatter.format(Math.round($storageStats.availableBytes/1024/1024/1024))}></progress>{numberFormatter.format(Math.round($storageStats.availableBytes/1024/1024/1024))} GB</div>
+	<div class="text-center">{numberFormatter.format(Math.round($storageStats.occupiedBytes/1024/1024/1024))} GB<progress class="progress w-56" style="margin-left: 0.25em; margin-right: 0.25em;" value={numberFormatter.format(Math.round($storageStats.occupiedBytes/1024/1024/1024))} max={numberFormatter.format(Math.round($storageStats.totalSizeBytes/1024/1024/1024))}></progress>{numberFormatter.format(Math.round($storageStats.totalSizeBytes/1024/1024/1024))} GB</div>
 	<div class="card-body items-center text-center mb-0">
 		{#if $transcriptions.length > 0}
 			{#each $transcriptions as tr (tr.id)}
