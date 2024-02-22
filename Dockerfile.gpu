@@ -62,7 +62,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 RUN ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
     ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
-    ln -s -f /usr/bin/pip3 /usr/bin/pip
+    ln -s -f /usr/bin/pip3 /usr/bin/pip \
+    curl -sS https://bootstrap.pypa.io/get-pip.py | sudo /usr/bin/python3
 
 # Python service setup
 COPY ./transcription-api /app/transcription
