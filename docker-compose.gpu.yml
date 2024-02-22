@@ -18,7 +18,9 @@ services:
 
   translate:
     container_name: whisper-libretranslate
-    image: libretranslate/libretranslate:latest-cuda
+    image: nubitic/libretranslate:1.5.5-cuda
+    runtime: nvidia
+    profiles: ["gpu"]
     restart: unless-stopped
     volumes:
       - ./whishper_data/libretranslate/data:/home/libretranslate/.local/share
@@ -37,17 +39,12 @@ services:
       default:
         aliases:
           - translate
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
 
   whishper:
     pull_policy: always
     image: pluja/whishper:${WHISHPER_VERSION:-latest-gpu}
+    profiles: ["gpu"]
+    runtime: nvidia
     env_file:
       - .env
     volumes:
@@ -71,10 +68,3 @@ services:
       PUBLIC_WHISHPER_PROFILE: gpu
       WHISPER_MODELS_DIR: /app/models
       UPLOAD_DIR: /app/uploads
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
