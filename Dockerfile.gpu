@@ -68,7 +68,7 @@ RUN ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
 COPY ./transcription-api /app/transcription
 WORKDIR /app/transcription
     
-RUN git clone --recursive --depth 1 --branch v3.22.0 https://github.com/OpenNMT/CTranslate2.git
+RUN git clone --recursive --depth 1 --branch v3.24.0 https://github.com/OpenNMT/CTranslate2.git
 RUN rm CTranslate2/CMakeLists.txt
 COPY ./transcription-api/CMakeLists-CTranslate2.txt CTranslate2/CMakeLists.txt
 RUN mkdir CTranslate2/build
