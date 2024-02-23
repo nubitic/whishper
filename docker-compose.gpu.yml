@@ -15,12 +15,11 @@ services:
     expose:
       - 27017
     command: ['--logpath', '/var/log/mongodb/mongod.log']
-
+        
   translate:
-    container_name: whisper-libretranslate
+    container_name: whisper-libretranslate-n
     image: nubitic/libretranslate:1.5.5-cuda
     runtime: nvidia
-    profiles: ["gpu"]
     restart: unless-stopped
     volumes:
       - ./whishper_data/libretranslate/data:/home/libretranslate/.local/share
@@ -41,16 +40,16 @@ services:
           - translate
 
   whishper:
-    pull_policy: always
-    image: pluja/whishper:${WHISHPER_VERSION:-latest-gpu}
-    profiles: ["gpu"]
+#    pull_policy: always
+    image: nubitic/whishper:3
     runtime: nvidia
     env_file:
       - .env
     volumes:
       - ./whishper_data/uploads:/app/uploads
+      - ./whishper_data/models:/app/models
       - ./whishper_data/logs:/var/log/whishper
-    container_name: whishper
+    container_name: whishpern
     restart: unless-stopped
     networks:
       default:
