@@ -54,12 +54,14 @@ class FasterWhisperBackend(Backend):
         """
         result: list[Segment] = []
         assert self.model is not None
+        print("About to transcribe", flush=True)
         segments, info = self.model.transcribe(
             input,
             beam_size=5,
             word_timestamps=True,
             language=language,
         )
+        print("Transcribe finish", flush=True)
         # ps = playback seconds
         with tqdm(
             total=info.duration, unit_scale=True, unit="ps", disable=silent

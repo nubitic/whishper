@@ -20,7 +20,7 @@ async def transcribe_endpoint(file: UploadFile = File(None),
     if device != "cpu" and device != "cuda":
         return {"detail": "Device must be either cpu or cuda"}
     
-    print(f"Transcribing with model {model_size.value} on device {device}...")
+    print(f"Transcribing with model {model_size.value} on device {device}...", flush=True)
     if file is not None:
         # if a file is uploaded, use it
         return await transcribe_file(file, model_size.value, language.value, device)
@@ -43,4 +43,4 @@ if __name__ == "__main__":
     for model in model_list:
         m = FasterWhisperBackend(model_size=model)
         m.get_model()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level='debug', access_log=True)
