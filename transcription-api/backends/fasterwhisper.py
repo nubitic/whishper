@@ -4,6 +4,7 @@ import os, math
 from tqdm import tqdm  # type: ignore
 import uuid
 from faster_whisper import WhisperModel, download_model, decode_audio
+import logging
 
 class FasterWhisperBackend(Backend):
     device: str = "cpu"  # cpu, cuda
@@ -13,6 +14,8 @@ class FasterWhisperBackend(Backend):
     def __init__(self, model_size, device: str = "cpu"):
         self.model_size = model_size
         self.device = device
+        logging.basicConfig()
+        logging.getLogger("faster_whisper").setLevel(logging.DEBUG)
         self.__post_init__()
 
     def model_path(self) -> str:
