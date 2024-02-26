@@ -14,3 +14,4 @@ venv
 transcription-api/backends/parallelization.py
 /.project
 work-docker/
+frontend/package-lock.json

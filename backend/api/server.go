@@ -97,6 +97,15 @@ func (s *Server) RegisterRoutes() {
 		return err
 	})
 
+        s.Router.Get("/api/storagestats", func(c *fiber.Ctx) error {
+                err := s.handleGetStorageStats(c)
+                if err != nil {
+                        log.Error().Err(err).Msg("Error handling POST /api/storagestats")
+                }
+                return err
+        })
+
+
 	// Register HTTP route for getting initial state.
 	s.Router.Get("/api/transcriptions/:id", func(c *fiber.Ctx) error {
 		log.Debug().Msgf("GET /api/transcriptions/%v", c.Params("id"))

@@ -1,12 +1,15 @@
-FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+FROM nubitic/l4t-pytorch:r35.1.0-pth1.12-py3
 
 ENV PYTHON_VERSION=3.10
 
 RUN export DEBIAN_FRONTEND=noninteractive \
+    && add-apt-repository ppa:deadsnakes/ppa \
     && apt-get -qq update \
     && apt-get -qq install --no-install-recommends \
     python${PYTHON_VERSION} \
     python${PYTHON_VERSION}-venv \
+    python${PYTHON_VERSION}-dev \
+    pkg-config gcc g++ libpython${PYTHON_VERSION}-dev cmake \
     python3-pip \
     ffmpeg \
     curl \
@@ -14,12 +17,24 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 RUN ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
     ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
-    ln -s -f /usr/bin/pip3 /usr/bin/pip
+    ln -s -f /usr/bin/pip3 /usr/bin/pip && \
+    curl https://bootstrap.pypa.io/get-pip.py | sudo python3 
+
+RUN git clone --recursive https://github.com/OpenNMT/CTranslate2.git
+RUN rm CTranslate2/CMakeLists.txt
+COPY CMakeLists-CTranslate2.txt CTranslate2/CMakeLists.txt
+RUN mkdir CTranslate2/build
+RUN cd CTranslate2/build && /usr/bin/cmake -DWITH_CUDA=ON -DWITH_MKL=OFF -DWITH_CUDNN=ON ..
+RUN cd CTranslate2/build && make -j4
+RUN cd CTranslate2/build && sudo make install
+RUN sudo ldconfig
+RUN cd CTranslate2/python && pip3 install -r install_requirements.txt
+RUN cd CTranslate2/python && python3 setup.py bdist_wheel
+RUN cd CTranslate2/python && pip3 install dist/*.whl
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt \
-    && pip3 install python-multipart \
-    && pip3 install torch --index-url https://download.pytorch.org/whl/cu118
+    && pip3 install python-multipart 
 
 WORKDIR /app
 

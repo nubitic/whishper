@@ -171,7 +171,7 @@
 	<!-- Menu -->
 	<ul class="menu menu-horizontal bg-base-200 rounded-box mt-6">
 		<li>
-			<a href="/" class="tooltip" data-tip="Home">
+			<a href={CLIENT_API_HOST} class="tooltip" data-tip="Home">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="h-5 w-5"

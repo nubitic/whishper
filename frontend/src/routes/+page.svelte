@@ -1,8 +1,8 @@
 <script>
 	import { Toaster } from 'svelte-french-toast';
-	import { transcriptions, uploadProgress } from '$lib/stores';
+	import { transcriptions, uploadProgress, storageStats } from '$lib/stores';
 	import { browser, dev } from '$app/environment';
-	import { CLIENT_WS_HOST } from '$lib/utils';
+	import { CLIENT_WS_HOST, CLIENT_API_HOST } from '$lib/utils';
 	import { onMount, onDestroy } from 'svelte';
 	import ModalTranscriptionForm from '$lib/components/ModalTranscriptionForm.svelte';
 	import ModalDownloadOptions from '$lib/components/ModalDownloadOptions.svelte';
@@ -81,6 +81,12 @@
 			socket.close(1000);
 		}
 	});
+
+      export const numberFormatter = new Intl.NumberFormat('en-US', {
+          style: 'decimal',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
 </script>
 
 <Toaster />
@@ -91,7 +97,7 @@
 <header>
 	<h1 class="flex items-center justify-center mt-8 space-x-4 text-4xl font-bold">
 		<span>
-			<img class="w-20 h-20" src="/logo.svg" alt="Logo: a cloud whispering" />
+			<img class="w-20 h-20" src={`${CLIENT_API_HOST}/logo.svg`} alt="Logo: a cloud whispering" />
 		</span>
 		<span> Whishper </span>
 	</h1>
@@ -110,6 +116,7 @@
 			onclick="modalNewTranscription.showModal()">✨ new transcription</button
 		>
 	{/if}
+	<div class="text-center">{numberFormatter.format(Math.round($storageStats.occupiedBytes/1024/1024/1024))} GB<progress class="progress w-56" style="margin-left: 0.25em; margin-right: 0.25em;" value={numberFormatter.format(Math.round($storageStats.occupiedBytes/1024/1024/1024))} max={numberFormatter.format(Math.round($storageStats.totalSizeBytes/1024/1024/1024))}></progress>{numberFormatter.format(Math.round($storageStats.totalSizeBytes/1024/1024/1024))} GB</div>
 	<div class="items-center mb-0 text-center card-body">
 		{#if $transcriptions.length > 0}
 			{#each $transcriptions.slice().reverse() as tr (tr.id)}

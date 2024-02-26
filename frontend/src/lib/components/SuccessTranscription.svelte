@@ -11,6 +11,11 @@
     let translate = () => {
         dispatch('translate', tr); // emit a custom event with the transcription as detail
     }
+    export const numberFormatter = new Intl.NumberFormat('en-US', {
+	  style: 'decimal',
+	  minimumFractionDigits: 0,
+	  maximumFractionDigits: 0
+	});
 </script>
 
 <div class="alert alert-success p-3">
@@ -25,12 +30,12 @@
                 <span class="font-bold text-xs">{tr.translations.length} translations</span>
             </span>
             <span class="space-x-1">
-                <span class="font-bold text-xs">{tr.result.text.split(" ").length} words</span>
+                <span class="font-bold text-xs">{numberFormatter.format(tr.result.text.split(" ").length)} words</span>
             </span>
         </p>
     </span>
     <div class="flex items-center justify-center flex-wrap space-x-2">
-        <a href="/editor/{tr.id}" class="btn btn-xs md:btn-sm">
+        <a href="./editor/{tr.id}" class="btn btn-xs md:btn-sm">
             <span class="tooltip flex items-center justify-center" data-tip="Edit">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
